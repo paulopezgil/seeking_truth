@@ -22,8 +22,8 @@ class ChatBot:
         return response
     
 class ChatBotManager:
-    def __init__(self, context : str):
-        self.system_bot = ChatBot(context)
+    def __init__(self, client : AzureOpenAI, model : str, context : str):
+        self.system_bot = ChatBot(context = context, client = client, model = model)
         self.npc_bots = {}  # Dictionary to store NPC bots by ID
 
     def create_npc(self, npc_id: str, message: str = None) -> ChatBot:
