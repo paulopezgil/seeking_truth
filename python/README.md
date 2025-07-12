@@ -13,7 +13,7 @@ In this repo different notebooks that use the Azure OpenAI API are developed
 
 2. **Activate the environment:**
     ```bash
-    source venv/bin/activate
+    source .venv/bin/activate
     ```
 
 3. **Install the requirements:**
