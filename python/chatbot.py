@@ -1,5 +1,7 @@
+from openai import AzureOpenAI
+
 class ChatBot:
-    def __init__(self, context: str = "", temperature: float = 0, model: str = os.getenv('MODEL')):
+    def __init__(self, client : AzureOpenAI, model : str, context: str = "", temperature: float = 0):
         self.model = model
         self.messages = [{'role': 'system', 'content': context}]
         self.temperature = temperature
@@ -9,7 +11,7 @@ class ChatBot:
         self.messages.append({'role': 'user', 'content': prompt})
 
         # Call the OpenAI API to get a response
-        response = client.chat.completions.create(
+        response = self.client.chat.completions.create(
             model=self.model,
             messages=self.messages,
             temperature=self.temperature, # this is the degree of randomness of the model's output
@@ -24,7 +26,7 @@ class ChatBotManager:
         self.system_bot = ChatBot(context)
         self.npc_bots = {}  # Dictionary to store NPC bots by ID
 
-    def get_or_create_npc(self, npc_id: str, message: str = None) -> ChatBot:
+    def create_npc(self, npc_id: str, message: str = None) -> ChatBot:
         if npc_id not in self.npc_bots:
             self.npc_bots[npc_id] = ChatBot(npc_id, personality)
         return self.npc_bots[npc_id]
@@ -35,12 +37,3 @@ class ChatBotManager:
     def send_to_npc(self, npc_id: str, message: str, personality: str = None) -> str:
         npc_bot = self.get_or_create_npc(npc_id, personality)
         return npc_bot.respond(message)
-
-    def get_npc_history(self, npc_id: str) -> list:
-        if npc_id in self.npc_bots:
-            return self.npc_bots[npc_id].message_history
-        return []
-
-    def reset_all(self):
-        self.system_bot.reset()
-        self.npc_bots.clear()
