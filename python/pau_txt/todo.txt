@@ -1,0 +1,8 @@
+Python backend:
+- Fer prompt sistema
+
+C# game engine:
+- 
+
+Git repository:
+- Afegir al README com iniciar el server de uvicorn (sempre m'oblido)

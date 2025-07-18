@@ -1,5 +1,0 @@
-Python backend:
-- Fer prompt sistema
-
-C# game engine:
-- 
