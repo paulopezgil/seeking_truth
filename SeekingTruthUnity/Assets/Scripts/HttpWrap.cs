@@ -7,7 +7,7 @@ using UnityEngine;
 
 public static class HttpWrap
 {
-    const string base_url = "http://192.168.1.114:8000";
+    const string base_url = "http://localhost:8000";
 
     private static readonly HttpClient client = new HttpClient();
 
@@ -21,7 +21,9 @@ public static class HttpWrap
 
     public static async Task<string> SendPostRequest(string url, object content)
     {
-        var response = await client.PostAsync(base_url + url, new StringContent(JsonUtility.ToJson(content)));
+        string json = JsonUtility.ToJson(content);
+        Debug.Log(json);
+        var response = await client.PostAsync(base_url + url, new StringContent(json));
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
     }
