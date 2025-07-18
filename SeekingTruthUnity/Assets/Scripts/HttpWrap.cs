@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public static class HttpWrap
 {
-    const string base_url = "http://10.0.4.60:8000";
+    const string base_url = "http://192.168.1.114:8000";
 
     private static readonly HttpClient client = new HttpClient();
 
@@ -16,5 +17,12 @@ public static class HttpWrap
         ret = await client.GetStringAsync(base_url + url);
 
         return ret;
+    }
+
+    public static async Task<string> SendPostRequest(string url, object content)
+    {
+        var response = await client.PostAsync(base_url + url, new StringContent(JsonUtility.ToJson(content)));
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
     }
 }
