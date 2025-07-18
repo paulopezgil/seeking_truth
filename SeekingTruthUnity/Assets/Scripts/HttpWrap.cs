@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEngine;
+using System.Text;
 
 public static class HttpWrap
 {
@@ -23,7 +24,8 @@ public static class HttpWrap
     {
         string json = JsonUtility.ToJson(content);
         Debug.Log(json);
-        var response = await client.PostAsync(base_url + url, new StringContent(json));
+        var stringContent = new StringContent(json, Encoding.UTF8, "application/json");
+        var response = await client.PostAsync(base_url + url, stringContent);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
     }

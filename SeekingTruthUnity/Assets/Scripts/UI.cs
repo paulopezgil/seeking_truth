@@ -10,7 +10,7 @@ public class UI : MonoBehaviour
     [SerializeField]
     TMP_InputField contentInput;
 
-    public void CreateManagerButton()
+    public async void CreateManagerButton()
     {
         var request = new JsonStructures.ChatInitRequest
         {
@@ -18,20 +18,21 @@ public class UI : MonoBehaviour
         };
 
 
-        HttpWrap.SendPostRequest("/chat/init", request).ContinueWith(task =>
+        try
         {
-            if (task.IsCompletedSuccessfully)
-            {
-                JsonStructures.ChatInitResponse response = 
-                    JsonUtility.FromJson<JsonStructures.ChatInitResponse>(task.Result);
+            // Espera la respuesta (ya en el hilo principal)
+            string json = await HttpWrap.SendPostRequest("/chat/init", request);
 
-                chatResponseText.text = "Chat ID: " + response.chatId;  
-            }
-            else
-            {
-                Debug.LogError("Error: " + task.Exception);
-            }
-        });
+            JsonStructures.ChatInitResponse response =
+                JsonUtility.FromJson<JsonStructures.ChatInitResponse>(json);
+
+            // ? UI actualizada en el hilo principal
+            chatResponseText.text = "Chat ID: " + response.chatId;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Error: " + ex.Message);
+        }
     }
     
 }
